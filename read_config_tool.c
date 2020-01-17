@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #define MAX_STR_LENGTH	1000
 
 struct SMBUS_PATH{
@@ -78,14 +79,14 @@ return 0;
 //=====================================================
 //==============select switch channel  ================
 //slot5:[0x35-ch3][0xAF-ch2]
-int str2link(char *data_str)
+int str2link(void)
 {
 int xi=0;
 char addr[5]="0x00\0";
 char ch[5]="0x00\0";
 
 	
-	while(slot_path_info[xi]!=NULL)
+	while(slot_path_info[xi]!=0)
 	{
 		//printf("%c",slot_path_info[xi]);
 		if(slot_path_info[xi] == '[')
@@ -176,13 +177,15 @@ int main()
 {
 FILE *fd;
 char ch_buff;
-char *slot_sel="slot3";
+char *slot_sel="s";
+char slot_sel2[6];
 	fd=fopen("config.cfg","r");
 	if(fd==NULL)
 	{printf("open fail\n");}
 	else
 	{printf("open success\n");}
-
+sprintf((slot_sel2),"slot%d",1);
+printf(">>>%s\n",slot_sel2);
 config_file = &config_buff[0];
 config_file_temp= config_file;
 	while((ch_buff=fgetc(fd))!=EOF)
@@ -192,11 +195,11 @@ config_file_temp= config_file;
 		config_file_temp++;
 		printf("%c",ch_buff);
 	}
-str_parsing(config_file,slot_sel);
+str_parsing(config_file,slot_sel2);
 printf("===============================\n");
 printf("%s",slot_path_info);
 printf("================================\n");
-str2link(slot_path_info);
+str2link();
 fclose(fd);
 return 0;
 }
